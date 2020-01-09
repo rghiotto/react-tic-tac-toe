@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
+import styles from './css/styles';
 
 function Square(props) {
   return (
-    <button className="square" onClick={props.onClick}>
+    <button style={styles.square} onClick={props.onClick}>
       {props.value}
     </button>
   );
@@ -29,17 +29,17 @@ class Board extends React.Component {
     render() {
       return (
         <div>
-          <div className="board-row">
+          <div style={styles.boardRow}>
             {this.renderSquare(0)}
             {this.renderSquare(1)}
             {this.renderSquare(2)}
           </div>
-          <div className="board-row">
+          <div style={styles.boardRow}>
             {this.renderSquare(3)}
             {this.renderSquare(4)}
             {this.renderSquare(5)}
           </div>
-          <div className="board-row">
+          <div style={styles.boardRow}>
             {this.renderSquare(6)}
             {this.renderSquare(7)}
             {this.renderSquare(8)}
@@ -105,14 +105,14 @@ class Board extends React.Component {
       }
 
       return (
-        <div className="game">
-          <div className="game-board">
+        <div style={styles.game}>
+          <div style={styles.gameBoard}>
             <Board 
               squares={current.squares} 
               onClick={(i) => this.handleClick(i)}
             />
           </div>
-          <div className="game-info">
+          <div style={styles.gameInfo}>
             <div>{status}</div>
             <ol>{moves}</ol>
           </div>
