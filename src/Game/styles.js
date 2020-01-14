@@ -1,7 +1,7 @@
 export default {
   body: {
     fontSize: '14px',
-    fontFamily: "Century Gothic, Futura, sans-serif",
+    fontFamily: 'Century Gothic, Futura, sans-serif',
     margin: '20px',
   },
   ol: {
@@ -15,17 +15,17 @@ export default {
       clear: 'both',
       content: '',
       display: 'table',
-    }
+    },
   },
   status: {
     marginBottom: '10px',
   },
-  kbdNavigation:{
+  kbdNavigation: {
     square: {
       '&:focus': {
         background: '#ddd',
-      }
-    }
+      },
+    },
   },
   game: {
     display: 'flex',

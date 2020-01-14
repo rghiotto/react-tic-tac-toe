@@ -5,14 +5,12 @@ import styles from './styles';
 
 const Board = (props) => {
   const { squares, onClick } = props;
-  const renderSquare = (i) => {
-    return (
-      <Square
-        value={squares[i]}
-        onClick={() => onClick(i)}
-      />
-    );
-  };
+  const renderSquare = (i) => (
+    <Square
+      value={squares[i]}
+      onClick={() => onClick(i)}
+    />
+  );
 
   return (
     <div>
@@ -33,7 +31,7 @@ const Board = (props) => {
       </div>
     </div>
   );
-}
+};
 
 Board.propTypes = {
   squares: PropTypes.arrayOf(PropTypes.string).isRequired,
