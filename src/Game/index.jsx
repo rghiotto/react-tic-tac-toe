@@ -1,52 +1,50 @@
 import React, { useState } from 'react';
+import Board from '../components/Board';
 import styles from './styles';
-import Board from '../components/Board/index';
 
-export default () => {
+import { requesterService } from '../services';
+
+const calculateWinner = async (squares) => {
+  try {
+    return requesterService.post('/',{
+      squares,
+    });
+  } catch (err) {
+    return err;
+  }
+};
+
+const Game = () => {
   const [history, setHistory] = useState([{
     squares: Array(9).fill(null),
   }]);
   const [xIsNext, setXIsNext] = useState(true);
   const [stepNumber, setStepNumber] = useState(0);
+  const [winner, setWinner] = useState(0);
   const current = history[stepNumber];
-  const calculateWinner = (squares) => {
-    const lines = [
-      [0, 1, 2],
-      [3, 4, 5],
-      [6, 7, 8],
-      [0, 3, 6],
-      [1, 4, 7],
-      [2, 5, 8],
-      [0, 4, 8],
-      [2, 4, 6],
-    ];
-    for (let i = 0; i < lines.length; i += 1) {
-      const [a, b, c] = lines[i];
-      if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-        return squares[a];
-      }
-    }
-    return null;
-  };
-  const handleClick = (i) => {
+
+  const handleClick = async (i) => {
     const subHistory = history.slice(0, stepNumber + 1);
     const currentSubHistory = subHistory[subHistory.length - 1];
     const squares = currentSubHistory.squares.slice();
-    if (calculateWinner(squares) || squares[i]) {
+
+    if (winner || squares[i]) {
       return;
     }
+
     squares[i] = xIsNext ? 'X' : 'O';
     setHistory(subHistory.concat([{
       squares,
     }]));
     setStepNumber(subHistory.length);
     setXIsNext(!xIsNext);
+    setWinner(await calculateWinner(squares));
   };
-  const jumpTo = (step) => {
+  const jumpTo = async (step) => {
     setStepNumber(step);
     setXIsNext((step % 2) === 0);
+    setWinner(await calculateWinner(history[step].squares));
   };
-  const winner = calculateWinner(current.squares);
 
   const moves = history.map((step, move) => {
     const desc = move
@@ -78,3 +76,5 @@ export default () => {
     </div>
   );
 };
+
+export default Game;
