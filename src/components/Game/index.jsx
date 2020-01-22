@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
-import Board from '../components/Board';
+import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
+import Board from '../Board';
 import styles from './styles';
 
-import { requesterService } from '../services';
+import { requesterService } from '../../services';
 
 const calculateWinner = async (squares) => {
   try {
-    return requesterService.post('/',{
+    return requesterService.post('/', {
       squares,
     });
   } catch (err) {
@@ -14,15 +15,18 @@ const calculateWinner = async (squares) => {
   }
 };
 
-const Game = () => {
-  const [history, setHistory] = useState([{
-    squares: Array(9).fill(null),
-  }]);
+const Game = (props) => {
+  const { historyProps } = props;
+
+  const [history, setHistory] = useState(historyProps);
+  useEffect(() => {
+    setHistory(historyProps);
+  }, [historyProps]);
   const [xIsNext, setXIsNext] = useState(true);
   const [stepNumber, setStepNumber] = useState(0);
   const [winner, setWinner] = useState(0);
-  const current = history[stepNumber];
 
+  const current = history[stepNumber];
   const handleClick = async (i) => {
     const subHistory = history.slice(0, stepNumber + 1);
     const currentSubHistory = subHistory[subHistory.length - 1];
@@ -75,6 +79,16 @@ const Game = () => {
       </div>
     </div>
   );
+};
+
+Game.propTypes = {
+  historyProps: PropTypes.arrayOf(PropTypes.object),
+};
+
+Game.defaultProps = {
+  historyProps: [{
+    squares: Array(9).fill(null),
+  }],
 };
 
 export default Game;
