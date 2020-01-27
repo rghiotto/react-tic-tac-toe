@@ -48,11 +48,11 @@ const Game = (props) => {
     if (winner || squares[i]) {
       return;
     }
-    setXIsNext((x) => !x);
     squares[i] = xIsNext ? 'X' : 'O';
     setHistory(subHistory.concat([{
       squares,
     }]));
+    setXIsNext((x) => !x);
     defineWinner(squares);
   };
 
