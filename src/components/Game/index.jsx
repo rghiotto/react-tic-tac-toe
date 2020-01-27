@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
 import PropTypes from 'prop-types';
 import Board from '../Board';
 import styles from './styles';
@@ -19,35 +19,48 @@ const Game = (props) => {
   const { historyProps } = props;
 
   const [history, setHistory] = useState(historyProps);
-  useEffect(() => {
-    setHistory(historyProps);
-  }, [historyProps]);
   const [xIsNext, setXIsNext] = useState(true);
   const [stepNumber, setStepNumber] = useState(0);
-  const [winner, setWinner] = useState(0);
+  const [winner, setWinner] = useState(null);
+  const [current, setCurrent] = useState(historyProps[0]);
 
-  const current = history[stepNumber];
+  const defineWinner = async (squares) => {
+    setWinner(await calculateWinner(squares));
+  };
+
+  useEffect(() => {
+    setHistory(historyProps);
+    setCurrent(historyProps[historyProps.length - 1]);
+    defineWinner(historyProps[historyProps.length - 1].squares);
+    setStepNumber(historyProps.length - 1);
+  }, [historyProps]);
+
+  useEffect(() => {
+    setStepNumber(history.length - 1);
+    setCurrent(history[history.length - 1]);
+  }, [history]);
+
   const handleClick = async (i) => {
     const subHistory = history.slice(0, stepNumber + 1);
-    const currentSubHistory = subHistory[subHistory.length - 1];
-    const squares = currentSubHistory.squares.slice();
+    const subCurrent = subHistory[subHistory.length - 1];
+    const squares = subCurrent.squares.slice();
 
     if (winner || squares[i]) {
       return;
     }
-
+    setXIsNext((x) => !x);
     squares[i] = xIsNext ? 'X' : 'O';
     setHistory(subHistory.concat([{
       squares,
     }]));
-    setStepNumber(subHistory.length);
-    setXIsNext(!xIsNext);
-    setWinner(await calculateWinner(squares));
+    defineWinner(squares);
   };
+
   const jumpTo = async (step) => {
     setStepNumber(step);
     setXIsNext((step % 2) === 0);
-    setWinner(await calculateWinner(history[step].squares));
+    setCurrent(history[step]);
+    defineWinner(history[step].squares);
   };
 
   const moves = history.map((step, move) => {
