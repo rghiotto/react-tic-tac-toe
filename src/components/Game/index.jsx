@@ -45,7 +45,7 @@ const Game = (props) => {
     const subCurrent = subHistory[subHistory.length - 1];
     const squares = subCurrent.squares.slice();
 
-    if (winner || squares[i]) {
+    if (winner || squares[i] || historyProps.length > 1) {
       return;
     }
     squares[i] = xIsNext ? 'X' : 'O';
